@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+group = 'sh.miles'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("net.dv8tion:JDA:5.0.0-beta.19")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation('org.xerial:sqlite-jdbc:3.44.1.0')
+    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("org.apache.logging.log4j:log4j-api:2.20.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.20.0")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.20.0")
+    implementation("uk.org.lidalia:sysout-over-slf4j:1.0.2")
+
+    compileOnly("org.jetbrains:annotations:24.0.1")
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": "sh.miles.pineappleticketbot.Main"
+        )
+    }
+}
+
+shadowJar {
+    archiveFileName.set("PineappleTicketBot-${version}.jar")
+    archiveClassifier.set("")
+    destinationDirectory = file("C:\\Users\\immrt\\Desktop\\PineappleBot")
+}
+
+build.dependsOn shadowJar

@@ -1,0 +1,13 @@
+{
+  "channels": {
+    "ticket-category": "ID STR",
+    "button-channel": "ID STR",
+    "log-channel": "ID STR",
+    "transcript-channel": "ID STR"
+  },
+  "token": "YOUR TOKEN HERE",
+  "guild-id": "ID STR",
+  "admins": [
+    ""
+    ]
+}
