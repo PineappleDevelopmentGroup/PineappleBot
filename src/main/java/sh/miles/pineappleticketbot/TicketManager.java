@@ -201,4 +201,8 @@ public class TicketManager {
             }
         });
     }
+
+    public void unloadTicket(long channelId) {
+        this.tickets.remove(channelId);
+    }
 }

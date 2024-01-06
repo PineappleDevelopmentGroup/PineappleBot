@@ -30,6 +30,7 @@ public class TranscriptHandler {
 
     private void deleteTicketChannel(long channelId) {
         this.jda.getTextChannelById(channelId).delete().queue();
+        this.ticketManager.unloadTicket(channelId);
     }
 
     public void createAndSendTranscript(long channelId) throws IOException {
