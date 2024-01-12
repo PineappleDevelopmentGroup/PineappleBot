@@ -1,22 +1,17 @@
-package sh.miles.pineappleticketbot;
+package sh.miles.pineapplebot;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
-import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
-import net.dv8tion.jda.api.utils.FileUpload;
-import sh.miles.pineappleticketbot.data.*;
-import sh.miles.pineappleticketbot.storage.StorageManager;
+import sh.miles.pineapplebot.data.*;
+import sh.miles.pineapplebot.storage.StorageManager;
 
 import java.awt.*;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -24,15 +19,15 @@ import java.util.concurrent.CompletableFuture;
 
 public class TicketManager {
 
-    private final PineappleTicketBot bot;
+    private final PineappleBot bot;
     private final Category category;
     private final StorageManager storageManager;
-    //TODO load open ticket data on startup by splitting channel name to get ticket id then load said datatatatatatatata
+
     private final Map<Long, Ticket> tickets = new HashMap<>(); // <channel id, Ticket>
 
     private final TranscriptHandler transcriptHandler;
 
-    public TicketManager(PineappleTicketBot bot) {
+    public TicketManager(PineappleBot bot) {
         this.bot = bot;
         this.category = bot.getTicketCategory();
         this.storageManager = StorageManager.getInstance();

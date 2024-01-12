@@ -1,13 +1,12 @@
-package sh.miles.pineappleticketbot;
+package sh.miles.pineapplebot;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
-import sh.miles.pineappleticketbot.data.*;
+import sh.miles.pineapplebot.data.*;
 
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
@@ -18,11 +17,11 @@ import java.util.List;
 
 public class TranscriptHandler {
 
-    private final PineappleTicketBot bot;
+    private final PineappleBot bot;
     private final TicketManager ticketManager;
     private final JDA jda;
 
-    public TranscriptHandler(PineappleTicketBot bot, TicketManager ticketManager) {
+    public TranscriptHandler(PineappleBot bot, TicketManager ticketManager) {
         this.bot = bot;
         this.jda = bot.getSelfUser().getJDA();
         this.ticketManager = ticketManager;

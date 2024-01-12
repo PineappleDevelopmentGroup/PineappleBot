@@ -1,4 +1,4 @@
-package sh.miles.pineappleticketbot.data;
+package sh.miles.pineapplebot.data;
 
 public enum TicketType {
     PLUGIN_COMMISSION,

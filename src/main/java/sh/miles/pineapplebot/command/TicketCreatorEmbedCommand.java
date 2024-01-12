@@ -1,17 +1,17 @@
-package sh.miles.pineappleticketbot.command;
+package sh.miles.pineapplebot.command;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import sh.miles.pineappleticketbot.PineappleTicketBot;
+import sh.miles.pineapplebot.PineappleBot;
 
 import java.awt.*;
 
 public class TicketCreatorEmbedCommand implements BotCommand {
 
-    private final PineappleTicketBot bot;
+    private final PineappleBot bot;
 
-    public TicketCreatorEmbedCommand(PineappleTicketBot bot) {
+    public TicketCreatorEmbedCommand(PineappleBot bot) {
         this.bot = bot;
     }
 

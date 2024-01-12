@@ -1,4 +1,4 @@
-package sh.miles.pineappleticketbot.structure;
+package sh.miles.pineapplebot.structure;
 
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;

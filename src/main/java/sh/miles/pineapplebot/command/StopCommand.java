@@ -1,13 +1,13 @@
-package sh.miles.pineappleticketbot.command;
+package sh.miles.pineapplebot.command;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import sh.miles.pineappleticketbot.PineappleTicketBot;
+import sh.miles.pineapplebot.PineappleBot;
 
 public class StopCommand implements BotCommand {
 
-    private final PineappleTicketBot bot;
+    private final PineappleBot bot;
 
-    public StopCommand(PineappleTicketBot bot) {
+    public StopCommand(PineappleBot bot) {
         this.bot = bot;
     }
 

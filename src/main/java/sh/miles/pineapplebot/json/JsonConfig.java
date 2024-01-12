@@ -1,4 +1,4 @@
-package sh.miles.pineappleticketbot.json;
+package sh.miles.pineapplebot.json;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

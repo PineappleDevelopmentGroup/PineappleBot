@@ -1,11 +1,14 @@
-package sh.miles.pineappleticketbot.storage;
+package sh.miles.pineapplebot.storage;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import sh.miles.pineappleticketbot.data.PluginComissionTicket;
-import sh.miles.pineappleticketbot.data.PluginSetupTicket;
-import sh.miles.pineappleticketbot.data.ServerSetupTicket;
-import sh.miles.pineappleticketbot.data.Ticket;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sh.miles.pineapplebot.data.PluginComissionTicket;
+import sh.miles.pineapplebot.data.PluginSetupTicket;
+import sh.miles.pineapplebot.data.ServerSetupTicket;
+import sh.miles.pineapplebot.data.Ticket;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,32 +19,15 @@ public class StorageHandler {
 
     private HikariDataSource dataSource;
     private int lastId = 1;
+    private static final Logger LOGGER = LoggerFactory.getLogger(StorageHandler.class);
 
     public StorageHandler() {
         setupHikari();
     }
 
     private void setupHikari() {
-        System.out.println("Setting up Hikari Connection Pool");
-        HikariConfig config = new HikariConfig();
-
-        config.setJdbcUrl("jdbc:sqlite:./pineapple-ticket-bot.db");
-        config.setDriverClassName("org.sqlite.JDBC");
-        config.setMaximumPoolSize(15);
-        config.setPoolName("PineappleTicketBot-Connection-Pool");
-
-        config.addDataSourceProperty("useUnicode", "true");
-        config.addDataSourceProperty("characterEncoding", "utf-8");
-        config.addDataSourceProperty("rewriteBatchedStatements", "true");
-        config.addDataSourceProperty("tcpKeepAlive", "true");
-
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.addDataSourceProperty("useServerPrepStmts", "true");
-
-        config.addDataSourceProperty("useSSL", "false");
-        config.addDataSourceProperty("verifyServerCertificate", "false");
+        LOGGER.info("Setting up Hikari Connection Pool");
+        HikariConfig config = getHikariConfig();
 
         dataSource = new HikariDataSource(config);
 
@@ -65,9 +51,33 @@ public class StorageHandler {
             if (rs.next()) {
                 lastId = rs.getInt("id") + 1;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            LOGGER.error("Failed to setup Hikari Connection Pool", ex);
         }
+    }
+
+    @NotNull
+    private static HikariConfig getHikariConfig() {
+        HikariConfig config = new HikariConfig();
+
+        config.setJdbcUrl("jdbc:sqlite:./pineapple-ticket-bot.db");
+        config.setDriverClassName("org.sqlite.JDBC");
+        config.setMaximumPoolSize(15);
+        config.setPoolName("PineappleBot-Connection-Pool");
+
+        config.addDataSourceProperty("useUnicode", "true");
+        config.addDataSourceProperty("characterEncoding", "utf-8");
+        config.addDataSourceProperty("rewriteBatchedStatements", "true");
+        config.addDataSourceProperty("tcpKeepAlive", "true");
+
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+
+        config.addDataSourceProperty("useSSL", "false");
+        config.addDataSourceProperty("verifyServerCertificate", "false");
+        return config;
     }
 
     public CompletableFuture<Void> createTicketId(int id, int ticketId, String ticketType) {
@@ -81,8 +91,8 @@ public class StorageHandler {
                 statement.setString(3, ticketType);
 
                 statement.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException ex) {
+                LOGGER.error("Failed to create ticket id", ex);
             }
         });
     }
@@ -103,8 +113,8 @@ public class StorageHandler {
                 int futureId = lastId++;
                 createTicketId(futureId, rs.getInt("id"), "plugin_commission");
                 return futureId;
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException ex) {
+                LOGGER.error("Failed to create plugin commission ticket", ex);
             }
             return null;
         });
@@ -121,7 +131,7 @@ public class StorageHandler {
 
                 statement.executeUpdate();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                LOGGER.error("Failed to update plugin commission ticket channel", ex);
             }
         });
     }
@@ -145,7 +155,7 @@ public class StorageHandler {
                 createTicketId(futureId, rs.getInt("id"), "server_setup");
                 return futureId;
             } catch (SQLException e) {
-                e.printStackTrace();
+                LOGGER.error("Failed to create server setup ticket", e);
             }
             return null;
         });
@@ -162,7 +172,7 @@ public class StorageHandler {
 
                 statement.executeUpdate();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                LOGGER.error("Failed to update server setup ticket channel", ex);
             }
         });
     }
@@ -185,7 +195,7 @@ public class StorageHandler {
                 createTicketId(futureId, rs.getInt("id"), "plugin_setup");
                 return futureId;
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                LOGGER.error("Failed to create plugin setup ticket", ex);
             }
             return null;
         });
@@ -202,7 +212,7 @@ public class StorageHandler {
 
                 statement.executeUpdate();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                LOGGER.error("Failed to update plugin setup ticket channel", ex);
             }
         });
     }
@@ -225,7 +235,7 @@ public class StorageHandler {
                         tickets.add(ticket);
                     }
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
+                    LOGGER.error("Failed to load ticket", ex);
                 }
             }
             return tickets;
@@ -260,7 +270,7 @@ public class StorageHandler {
                 return ticket;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to load plugin commission ticket", ex);
         }
         return null;
     }
@@ -285,7 +295,7 @@ public class StorageHandler {
                 return ticket;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to load plugin setup ticket", ex);
         }
         return null;
     }
@@ -311,7 +321,7 @@ public class StorageHandler {
                 return ticket;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to load server setup ticket", ex);
         }
         return null;
     }

@@ -1,4 +1,4 @@
-package sh.miles.pineappleticketbot;
+package sh.miles.pineapplebot;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -9,24 +9,21 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.text.TextInput;
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.FileUpload;
-import sh.miles.pineappleticketbot.command.CommandHandler;
-import sh.miles.pineappleticketbot.json.JsonConfig;
-import sh.miles.pineappleticketbot.json.JsonConfigSection;
-import sh.miles.pineappleticketbot.listener.ButtonListener;
-import sh.miles.pineappleticketbot.listener.ModalListener;
-import sh.miles.pineappleticketbot.storage.StorageManager;
+import org.slf4j.LoggerFactory;
+import sh.miles.pineapplebot.command.CommandHandler;
+import sh.miles.pineapplebot.json.JsonConfig;
+import sh.miles.pineapplebot.json.JsonConfigSection;
+import sh.miles.pineapplebot.listener.ButtonListener;
+import sh.miles.pineapplebot.listener.ModalListener;
+import sh.miles.pineapplebot.storage.StorageManager;
 
-import java.awt.*;
 import java.util.List;
 
-public class PineappleTicketBot {
+public class PineappleBot {
+
+    private static PineappleBot instance;
 
     private JDA jda;
     private final TextChannel buttonPanelChannel;
@@ -36,8 +33,10 @@ public class PineappleTicketBot {
     private final List<String> adminIds;
     private final Guild guild;
     private final TicketManager ticketManager;
+    private final EmbedManager embedManager;
 
-    public PineappleTicketBot(JsonConfig config) {
+    public PineappleBot(JsonConfig config) {
+        instance = this;
         this.adminIds = List.of(config.getStrings("admins"));
         JsonConfigSection channels = config.getSection("channels");
         try {
@@ -47,7 +46,7 @@ public class PineappleTicketBot {
                     .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                     .build().awaitReady();
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
+            LoggerFactory.getLogger(getClass()).error("Failed to initialize JDA", ex);
         }
 
 
@@ -64,6 +63,8 @@ public class PineappleTicketBot {
                 new ButtonListener(this),
                 new ModalListener(this.ticketManager)
         );
+
+        embedManager = new EmbedManager();
     }
 
     public void registerCommand(String name, String description) {
@@ -72,10 +73,6 @@ public class PineappleTicketBot {
 
     public void log(String message) {
         this.logChannel.sendMessage(message).queue();
-    }
-
-    public void log(FileUpload upload) {
-        this.logChannel.sendFiles(upload).queue();
     }
 
     public List<String> getAdminIds() {
@@ -105,5 +102,13 @@ public class PineappleTicketBot {
 
     public TextChannel getTranscriptChannel() {
         return transcriptChannel;
+    }
+
+    public void handleEmbedCreatorButton(long messageId, String button) {
+        embedManager.handleButton(messageId, button);
+    }
+
+    public static PineappleBot getInstance() {
+        return instance;
     }
 }

@@ -1,15 +1,15 @@
-package sh.miles.pineappleticketbot.listener;
+package sh.miles.pineapplebot.listener;
 
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import sh.miles.pineappleticketbot.PineappleTicketBot;
-import sh.miles.pineappleticketbot.structure.Modals;
+import sh.miles.pineapplebot.PineappleBot;
+import sh.miles.pineapplebot.structure.Modals;
 
 public class ButtonListener extends ListenerAdapter {
 
-    private final PineappleTicketBot bot;
+    private final PineappleBot bot;
 
-    public ButtonListener(PineappleTicketBot bot) {
+    public ButtonListener(PineappleBot bot) {
         this.bot = bot;
     }
 
@@ -34,6 +34,11 @@ public class ButtonListener extends ListenerAdapter {
             } else {
                 event.getHook().sendMessage("You do not have permission to use this button.").setEphemeral(true).queue();
             }
+        }
+
+        if (event.getComponentId().contains("page-")) {
+            event.deferEdit().queue();
+            this.bot.getTicketManager().handleEmbedCreatorButton(event);
         }
     }
 }

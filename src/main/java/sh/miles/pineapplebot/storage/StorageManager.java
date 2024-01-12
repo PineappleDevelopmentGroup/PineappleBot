@@ -1,6 +1,6 @@
-package sh.miles.pineappleticketbot.storage;
+package sh.miles.pineapplebot.storage;
 
-import sh.miles.pineappleticketbot.data.Ticket;
+import sh.miles.pineapplebot.data.Ticket;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

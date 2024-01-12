@@ -1,9 +1,9 @@
-package sh.miles.pineappleticketbot.listener;
+package sh.miles.pineapplebot.listener;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
-import sh.miles.pineappleticketbot.TicketManager;
+import sh.miles.pineapplebot.TicketManager;
 
 import java.util.List;
 
