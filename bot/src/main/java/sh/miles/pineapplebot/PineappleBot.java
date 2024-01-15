@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.slf4j.LoggerFactory;
 import sh.miles.pineapplebot.command.CommandHandler;
@@ -104,8 +106,20 @@ public class PineappleBot {
         return transcriptChannel;
     }
 
-    public void handleEmbedCreatorButton(long messageId, String button) {
-        embedManager.handleButton(messageId, button);
+    public Modal handleEmbedCreatorButton(long messageId, String button) {
+        return embedManager.handleButton(messageId, button);
+    }
+
+    public void handleEmbedCreatorModal(long messageId, String modalId, ModalMapping... mappings) {
+        embedManager.handleModal(messageId, modalId, mappings);
+    }
+
+    public void unloadEmbedCreator(long messageId) {
+        embedManager.unload(messageId);
+    }
+
+    public void createEmbed(TextChannel channel) {
+        embedManager.create(channel);
     }
 
     public static PineappleBot getInstance() {

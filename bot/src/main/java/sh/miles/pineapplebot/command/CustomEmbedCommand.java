@@ -19,5 +19,7 @@ public class CustomEmbedCommand implements BotCommand {
             return;
         }
 
+        event.reply("Creating").queue();
+        this.bot.createEmbed(event.getChannel().asTextChannel());
     }
 }

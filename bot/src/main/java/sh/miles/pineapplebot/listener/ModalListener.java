@@ -3,6 +3,7 @@ package sh.miles.pineapplebot.listener;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
+import sh.miles.pineapplebot.PineappleBot;
 import sh.miles.pineapplebot.TicketManager;
 
 import java.util.List;
@@ -30,6 +31,11 @@ public class ModalListener extends ListenerAdapter {
         if (event.getInteraction().getModalId().equals("plugin-setup")) {
             event.deferReply(true).queue();
             readPluginSetupModal(event);
+        }
+
+        if (event.getInteraction().getModalId().contains("creator-")) {
+            event.deferEdit().queue();
+            PineappleBot.getInstance().handleEmbedCreatorModal(event.getMessage().getIdLong() ,event.getInteraction().getModalId(), event.getInteraction().getValues().toArray(new ModalMapping[0]));
         }
     }
 

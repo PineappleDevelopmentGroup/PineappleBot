@@ -5,8 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sh.miles.pineapplebot.json.JsonConfig;
 import sh.miles.pineapplebot.json.JsonConfigSection;
-import uk.org.lidalia.sysoutslf4j.context.LogLevel;
-import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
