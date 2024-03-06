@@ -2,6 +2,7 @@ package sh.miles.pineapplebot.storage;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import net.dv8tion.jda.internal.utils.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,9 @@ public class StorageHandler {
             statement.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS custom_embed_fields (id INTEGER PRIMARY KEY AUTOINCREMENT, field_name VARCHAR(256), field_value VARCHAR(1024), inline BOOLEAN)"
             );
+            statement.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS text_commands (command TEXT, value TEXT)"
+            );
 
 
             ResultSet rs = statement.executeQuery("SELECT * FROM ticket_info ORDER BY id DESC LIMIT 1");
@@ -89,6 +93,29 @@ public class StorageHandler {
         return config;
     }
 
+    public CompletableFuture<Void> saveTextCommand(String command, String value) {
+        return CompletableFuture.runAsync(() -> DatabaseHelper.executeUpdate(this.dataSource,
+                "INSERT INTO text_commands (command, value) VALUES (?, ?) ON CONFLICT DO UPDATE SET value = ? WHERE command = ?",
+                command, value, value, command
+        ));
+    }
+
+    public CompletableFuture<List<Pair<String, String>>> getTextCommands() {
+        return CompletableFuture.supplyAsync(() -> DatabaseHelper.executeQuery((rs) -> {
+            List<Pair<String, String>> result = new ArrayList<>();
+            try {
+                while (rs.next()) {
+                    String command = rs.getString("command");
+                    String value = rs.getString("value");
+                    result.add(Pair.of(command, value));
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            return result;
+        }, this.dataSource, "SELECT * FROM text_commands"));
+    }
+
     public CompletableFuture<Void> createTicketId(int id, int ticketId, String ticketType) {
         return CompletableFuture.runAsync(() -> DatabaseHelper.executeUpdate(this.dataSource,
                 "INSERT INTO ticket_info (id, ticket_id, ticket_type) VALUES (?, ?, ?)",
@@ -100,8 +127,11 @@ public class StorageHandler {
 
     public CompletableFuture<Integer> createPluginCommissionTicket(long creatorId, String function, String budget, String otherInfo) {
         return CompletableFuture.supplyAsync(() -> DatabaseHelper.executeQuery((rs -> getFutureId(rs,
-                "plugin_commission"
-        )), this.dataSource, "INSERT INTO plugin_commission (user_id, function, budget, other_info) VALUES (?, ?, ?, ?) RETURNING id", creatorId, function, budget, otherInfo));
+                        "plugin_commission"
+                )), this.dataSource,
+                "INSERT INTO plugin_commission (user_id, function, budget, other_info) VALUES (?, ?, ?, ?) RETURNING id",
+                creatorId, function, budget, otherInfo
+        ));
     }
 
     public CompletableFuture<Void> updatePluginCommissionTicketChannel(int id, long channelId) {
@@ -127,7 +157,8 @@ public class StorageHandler {
 
     public CompletableFuture<Void> updateServerSetupTicketChannel(int id, long channelId) {
         return CompletableFuture.runAsync(() -> DatabaseHelper.executeUpdate(this.dataSource,
-                "UPDATE server_setup SET channel_id = ? WHERE id = (SELECT ticket_id FROM ticket_info WHERE id = ?)", channelId, id
+                "UPDATE server_setup SET channel_id = ? WHERE id = (SELECT ticket_id FROM ticket_info WHERE id = ?)",
+                channelId, id
         ));
     }
 
@@ -145,7 +176,8 @@ public class StorageHandler {
 
     public CompletableFuture<Void> updatePluginSetupTicketChannel(int id, long channelId) {
         return CompletableFuture.runAsync(() -> DatabaseHelper.executeUpdate(this.dataSource,
-                "UPDATE plugin_setup SET channel_id = ? WHERE id = (SELECT ticket_id FROM ticket_info WHERE id = ?)", channelId, id
+                "UPDATE plugin_setup SET channel_id = ? WHERE id = (SELECT ticket_id FROM ticket_info WHERE id = ?)",
+                channelId, id
         ));
     }
 

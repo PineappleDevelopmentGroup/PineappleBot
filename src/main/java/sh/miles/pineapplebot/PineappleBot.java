@@ -9,12 +9,18 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.slf4j.LoggerFactory;
 import sh.miles.pineapplebot.command.CommandHandler;
+import sh.miles.pineapplebot.command.text.TextCommandHandler;
 import sh.miles.pineapplebot.json.JsonConfig;
 import sh.miles.pineapplebot.json.JsonConfigSection;
 import sh.miles.pineapplebot.listener.ButtonListener;
@@ -63,10 +69,13 @@ public class PineappleBot {
         this.ticketManager = new TicketManager(this);
         this.jda.addEventListener(new CommandHandler(this),
                 new ButtonListener(this),
-                new ModalListener(this.ticketManager)
+                new ModalListener(this.ticketManager),
+                new TextCommandHandler(this)
         );
 
         embedManager = new EmbedManager();
+
+        this.guild.upsertCommand(Commands.slash("textcommand", "creates a text based command").addOption(OptionType.STRING, "command", "the command name").addOption(OptionType.STRING, "value", "the return value of the command")).queue();
     }
 
     public void registerCommand(String name, String description) {

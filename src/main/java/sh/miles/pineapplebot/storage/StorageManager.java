@@ -1,7 +1,10 @@
 package sh.miles.pineapplebot.storage;
 
+import net.dv8tion.jda.internal.utils.tuple.Pair;
 import sh.miles.pineapplebot.data.Ticket;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -41,6 +44,14 @@ public class StorageManager {
 
     public CompletableFuture<List<Ticket>> loadOpenTickets(List<Integer> ids) {
         return this.handler.loadOpenTickets(ids);
+    }
+
+    public CompletableFuture<Void> saveTextCommand(String command, String value) {
+        return this.handler.saveTextCommand(command, value);
+    }
+
+    public CompletableFuture<List<Pair<String, String>>> getTextCommands() {
+        return this.handler.getTextCommands();
     }
 
     public void shutdown() {

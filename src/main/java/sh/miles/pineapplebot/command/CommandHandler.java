@@ -24,7 +24,7 @@ public class CommandHandler extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         BotCommand command = commands.get(event.getName());
         if (command == null) {
-            LoggerFactory.getLogger(getClass()).warn("Command not found: " + event.getName());
+//            LoggerFactory.getLogger(getClass()).warn("Command not found: " + event.getName());
             return;
         }
 

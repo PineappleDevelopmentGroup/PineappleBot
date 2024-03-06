@@ -1,9 +1,0 @@
-plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow"
-}
-
-shadowJar {
-    archiveFileName.set("PineappleBot-${rootProject.version}-updater.jar")
-    archiveClassifier.set("")
-}

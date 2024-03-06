@@ -1,4 +1,3 @@
 rootProject.name = 'PineappleTicketBot'
-include 'bot'
-include 'updater'
+
 
