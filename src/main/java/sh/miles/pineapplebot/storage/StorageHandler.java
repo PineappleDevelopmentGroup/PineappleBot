@@ -13,7 +13,9 @@ import sh.miles.pineapplebot.data.Ticket;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class StorageHandler {
@@ -100,14 +102,14 @@ public class StorageHandler {
         ));
     }
 
-    public CompletableFuture<List<Pair<String, String>>> getTextCommands() {
+    public CompletableFuture<Map<String, String>> getTextCommands() {
         return CompletableFuture.supplyAsync(() -> DatabaseHelper.executeQuery((rs) -> {
-            List<Pair<String, String>> result = new ArrayList<>();
+            Map<String, String> result = new HashMap<>();
             try {
                 while (rs.next()) {
                     String command = rs.getString("command");
                     String value = rs.getString("value");
-                    result.add(Pair.of(command, value));
+                    result.put(command, value);
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();

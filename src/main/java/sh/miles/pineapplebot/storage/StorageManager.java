@@ -6,6 +6,7 @@ import sh.miles.pineapplebot.data.Ticket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class StorageManager {
@@ -50,7 +51,7 @@ public class StorageManager {
         return this.handler.saveTextCommand(command, value);
     }
 
-    public CompletableFuture<List<Pair<String, String>>> getTextCommands() {
+    public CompletableFuture<Map<String, String>> getTextCommands() {
         return this.handler.getTextCommands();
     }
 

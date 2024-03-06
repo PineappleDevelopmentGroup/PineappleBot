@@ -28,9 +28,7 @@ public class TextCommandHandler extends ListenerAdapter {
                 return;
             }
 
-            for (Pair<String, String> response : result) {
-                this.commands.put(response.getLeft(), response.getRight());
-            }
+            this.commands.putAll(result);
         });
     }
 
